@@ -19,6 +19,7 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
+      'react-refresh/only-export-components': 'off',
       'no-restricted-imports': [
         'error',
         {
@@ -30,12 +31,6 @@ export default defineConfig([
           ],
         },
       ],
-    },
-  },
-  {
-    files: ['src/components/ui/**/*.{ts,tsx}'],
-    rules: {
-      'react-refresh/only-export-components': 'off',
     },
   },
 ])
