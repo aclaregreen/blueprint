@@ -1,16 +1,19 @@
+import { useAuth } from "@/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/supabaseClient";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { Navigate, useNavigate } from "react-router";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const { session, loading } = useAuth();
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -27,6 +30,9 @@ export default function Login() {
       navigate("/");
     }
   }
+
+  if (loading) return <p>loading</p>;
+  if (session) return <Navigate to="/" replace />;
 
   return (
     <div className="login-page">
