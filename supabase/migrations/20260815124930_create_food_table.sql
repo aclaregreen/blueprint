@@ -27,3 +27,5 @@ with
   check (auth.uid () = user_id);
 
 create policy "Delete own food" on food for delete using (auth.uid () = user_id);
+
+grant insert, update, delete on food to authenticated;

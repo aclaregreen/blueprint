@@ -45,6 +45,7 @@ export type Database = {
           meal_id: string | null
           portion_size_grams: number
           protein: number
+          user_id: string
         }
         Insert: {
           calories: number
@@ -56,6 +57,7 @@ export type Database = {
           meal_id?: string | null
           portion_size_grams: number
           protein: number
+          user_id: string
         }
         Update: {
           calories?: number
@@ -67,6 +69,7 @@ export type Database = {
           meal_id?: string | null
           portion_size_grams?: number
           protein?: number
+          user_id?: string
         }
         Relationships: [
           {
@@ -95,6 +98,7 @@ export type Database = {
           name: string
           protein: number
           serving_size_grams: number
+          user_id: string
         }
         Insert: {
           calories: number
@@ -105,6 +109,7 @@ export type Database = {
           name: string
           protein: number
           serving_size_grams: number
+          user_id: string
         }
         Update: {
           calories?: number
@@ -115,6 +120,7 @@ export type Database = {
           name?: string
           protein?: number
           serving_size_grams?: number
+          user_id?: string
         }
         Relationships: []
       }
@@ -123,16 +129,19 @@ export type Database = {
           created_at: string
           id: string
           name: string
+          user_id: string
         }
         Insert: {
           created_at?: string
           id?: string
           name: string
+          user_id: string
         }
         Update: {
           created_at?: string
           id?: string
           name?: string
+          user_id?: string
         }
         Relationships: []
       }

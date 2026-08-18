@@ -74,3 +74,5 @@ create policy "Delete own meal food" on meal_food for delete using (
       and meal.user_id = auth.uid ()
   )
 );
+
+grant insert, update, delete on meal_food to authenticated;

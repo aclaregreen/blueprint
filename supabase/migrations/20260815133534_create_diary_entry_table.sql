@@ -28,3 +28,5 @@ with
   check (auth.uid () = user_id);
 
 create policy "Delete own entry" on diary_entry for delete using (auth.uid () = user_id);
+
+grant insert, update, delete on diary_entry to authenticated;

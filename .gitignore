@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 .env
+
+# Supabase Studio local SQL editor history
+supabase/snippets/
