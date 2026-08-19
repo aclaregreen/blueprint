@@ -1,3 +1,12 @@
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { supabase } from "@/supabaseClient";
 import { useQuery } from "@tanstack/react-query";
 
@@ -14,6 +23,19 @@ export default function Foods() {
 
   return (
     <div>
+      <Label>Foods</Label>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button>Add Food</Button>
+        </DialogTrigger>
+        <DialogContent className="fullscreen-dialog">
+          <DialogHeader>
+            <DialogTitle>New Food</DialogTitle>
+          </DialogHeader>
+          <p>add new food here</p>
+        </DialogContent>
+      </Dialog>
+
       {food.length === 0 ? (
         <p>No foods yet</p>
       ) : (
