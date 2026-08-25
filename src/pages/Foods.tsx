@@ -8,7 +8,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { supabase } from "@/supabaseClient";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -99,9 +98,10 @@ export default function Foods() {
   }
 
   return (
-    <div>
-      <Label>Foods</Label>
-      <Dialog open={open} onOpenChange={setOpen}>
+    <div className="foods-page">
+      <div className="foods-page-header">
+        <h1>Foods</h1>
+        <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button>Add Food</Button>
         </DialogTrigger>
@@ -180,13 +180,23 @@ export default function Foods() {
             </Button>
           </div>
         </DialogContent>
-      </Dialog>
+        </Dialog>
+      </div>
 
-      {food.length === 0 ? (
-        <p>No foods yet</p>
-      ) : (
-        food.map((f) => <p key={f.id}>{f.name}</p>)
-      )}
+      <div className="food-list">
+        {food.length === 0 ? (
+          <p className="food-empty">No foods yet</p>
+        ) : (
+          food.map((f) => (
+            <div key={f.id} className="food-row">
+              <span className="food-row-name">{f.name}</span>
+              <span className="food-row-meta">
+                {f.serving_size_grams}g · {f.calories} cal
+              </span>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }

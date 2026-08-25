@@ -240,3 +240,43 @@
   font-size: 1rem;
   margin-top: auto;
 }
+
+.foods-page {
+  padding: 1rem;
+}
+
+.foods-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.food-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.food-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.food-row-name {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.food-row-meta {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+.food-empty {
+  padding: 2rem 0;
+  text-align: center;
+  color: var(--muted-foreground);
+}
