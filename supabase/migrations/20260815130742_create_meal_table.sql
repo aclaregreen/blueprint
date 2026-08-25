@@ -22,3 +22,5 @@ with
   check (auth.uid () = user_id);
 
 create policy "Delete own meal" on meal for delete using (auth.uid () = user_id);
+
+grant insert, update, delete on meal to authenticated;
