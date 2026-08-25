@@ -280,3 +280,7 @@
   text-align: center;
   color: var(--muted-foreground);
 }
+
+[data-slot="combobox-content"] {
+  pointer-events: auto;
+}
