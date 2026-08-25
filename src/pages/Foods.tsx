@@ -32,7 +32,9 @@ export default function Foods() {
     carbs: null,
     protein: null,
   });
+  const [formError, setFormError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+
   const { data: food = [] } = useQuery({
     queryKey: ["food"],
     queryFn: async () => {
@@ -51,6 +53,7 @@ export default function Foods() {
   }
 
   async function handleSave() {
+    if (formError) setFormError(null);
     if (
       form.name.trim() === "" ||
       form.servingSizeGrams === null ||
@@ -58,8 +61,7 @@ export default function Foods() {
       form.carbs === null ||
       form.protein === null
     ) {
-      //add visual error
-      console.log("error 1");
+      setFormError("Missing required fields");
       return;
     }
     if (
@@ -68,8 +70,7 @@ export default function Foods() {
       form.carbs < 0 ||
       form.protein < 0
     ) {
-      //add visual error
-      console.log("error 2");
+      setFormError("Nutrition fields can't be negative");
       return;
     }
     const { error } = await supabase.from("food").insert({
@@ -82,7 +83,7 @@ export default function Foods() {
     });
 
     if (error) {
-      //error state and something else
+      setFormError(error.message);
       return;
     }
     queryClient.invalidateQueries({ queryKey: ["food"] });
@@ -161,6 +162,8 @@ export default function Foods() {
             }
             placeholder="Protein"
           />
+
+          {formError && <p className="form-error">{formError}</p>}
 
           <Button onClick={handleSave}>Save</Button>
         </DialogContent>
