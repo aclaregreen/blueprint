@@ -3,7 +3,7 @@ create table food (
   user_id uuid not null references auth.users (id),
   name text not null,
   serving_size_grams numeric not null,
-  calories numeric not null,
+  calories numeric generated always as (protein * 4 + carbs * 4 + fats * 9) stored,
   fats numeric not null,
   carbs numeric not null,
   protein numeric not null,

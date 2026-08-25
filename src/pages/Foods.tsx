@@ -16,7 +16,6 @@ import { useState } from "react";
 type NutritionForm = {
   name: string;
   servingSizeGrams: number | null;
-  calories: number | null;
   fats: number | null;
   carbs: number | null;
   protein: number | null;
@@ -29,11 +28,11 @@ export default function Foods() {
   const [form, setForm] = useState<NutritionForm>({
     name: "",
     servingSizeGrams: null,
-    calories: null,
     fats: null,
     carbs: null,
     protein: null,
   });
+  const [open, setOpen] = useState(false);
   const { data: food = [] } = useQuery({
     queryKey: ["food"],
     queryFn: async () => {
@@ -55,29 +54,28 @@ export default function Foods() {
     if (
       form.name.trim() === "" ||
       form.servingSizeGrams === null ||
-      form.calories === null ||
       form.fats === null ||
       form.carbs === null ||
       form.protein === null
     ) {
       //add visual error
+      console.log("error 1");
       return;
     }
     if (
       form.servingSizeGrams < 0 ||
-      form.calories < 0 ||
       form.fats < 0 ||
       form.carbs < 0 ||
       form.protein < 0
     ) {
       //add visual error
+      console.log("error 2");
       return;
     }
     const { error } = await supabase.from("food").insert({
       user_id: userId,
       name: form.name,
       serving_size_grams: form.servingSizeGrams,
-      calories: form.calories,
       fats: form.fats,
       carbs: form.carbs,
       protein: form.protein,
@@ -88,12 +86,21 @@ export default function Foods() {
       return;
     }
     queryClient.invalidateQueries({ queryKey: ["food"] });
+
+    setForm({
+      name: "",
+      servingSizeGrams: null,
+      fats: null,
+      carbs: null,
+      protein: null,
+    });
+    setOpen(false);
   }
 
   return (
     <div>
       <Label>Foods</Label>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button>Add Food</Button>
         </DialogTrigger>
@@ -117,18 +124,6 @@ export default function Foods() {
               })
             }
             placeholder="Serving Size Grams"
-          />
-          <Input
-            type="number"
-            min="0"
-            value={form.calories ?? ""}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                calories: toNumberOrNull(e.target.value),
-              })
-            }
-            placeholder="Calories"
           />
           <Input
             type="number"
