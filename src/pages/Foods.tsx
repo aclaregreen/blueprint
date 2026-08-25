@@ -109,63 +109,76 @@ export default function Foods() {
           <DialogHeader>
             <DialogTitle>New Food</DialogTitle>
           </DialogHeader>
-          <Input
-            value={form.name}
-            placeholder="Name"
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-          />
-          <Input
-            type="number"
-            min="0"
-            value={form.servingSizeGrams ?? ""}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                servingSizeGrams: toNumberOrNull(e.target.value),
-              })
-            }
-            placeholder="Serving Size Grams"
-          />
-          <Input
-            type="number"
-            min="0"
-            value={form.fats ?? ""}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                fats: toNumberOrNull(e.target.value),
-              })
-            }
-            placeholder="Fats"
-          />
-          <Input
-            type="number"
-            min="0"
-            value={form.carbs ?? ""}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                carbs: toNumberOrNull(e.target.value),
-              })
-            }
-            placeholder="Carbs"
-          />
-          <Input
-            type="number"
-            min="0"
-            value={form.protein ?? ""}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                protein: toNumberOrNull(e.target.value),
-              })
-            }
-            placeholder="Protein"
-          />
+          <div className="food-form">
+            <Input
+              className="food-input"
+              value={form.name}
+              placeholder="Name"
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
 
-          {formError && <p className="form-error">{formError}</p>}
+            <p className="food-section-label">Nutrition</p>
+            <div className="food-fields">
+              <Input
+                type="number"
+                min="0"
+                className="food-input"
+                value={form.servingSizeGrams ?? ""}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    servingSizeGrams: toNumberOrNull(e.target.value),
+                  })
+                }
+                placeholder="Serving Size (g)"
+              />
+              <Input
+                type="number"
+                min="0"
+                className="food-input"
+                value={form.fats ?? ""}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    fats: toNumberOrNull(e.target.value),
+                  })
+                }
+                placeholder="Fats (g)"
+              />
+              <Input
+                type="number"
+                min="0"
+                className="food-input"
+                value={form.carbs ?? ""}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    carbs: toNumberOrNull(e.target.value),
+                  })
+                }
+                placeholder="Carbs (g)"
+              />
+              <Input
+                type="number"
+                min="0"
+                className="food-input"
+                value={form.protein ?? ""}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    protein: toNumberOrNull(e.target.value),
+                  })
+                }
+                placeholder="Protein (g)"
+              />
+            </div>
 
-          <Button onClick={handleSave}>Save</Button>
+            {formError && <p className="form-error">{formError}</p>}
+
+            <Button className="food-button" onClick={handleSave}>
+              Save
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
 
