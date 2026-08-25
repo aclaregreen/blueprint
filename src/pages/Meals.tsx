@@ -105,9 +105,11 @@ export default function Meals() {
               <div>
                 <Input
                   value={selectedPortionSize ?? ""}
-                  onChange={(e) => toNumberOrNull(e.target.value)}
+                  onChange={(e) =>
+                    setSelectedPortionSize(toNumberOrNull(e.target.value))
+                  }
                   placeholder="Portion Size (g)"
-                />{" "}
+                />
                 <Button>Add to meal</Button>
               </div>
             )}
