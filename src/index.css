@@ -205,5 +205,5 @@
 }
 
 .form-error {
-  color: red;
+  color: var(--destructive);
 }
