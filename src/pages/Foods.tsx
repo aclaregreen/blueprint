@@ -95,8 +95,8 @@ export default function Foods() {
   }
 
   return (
-    <div className="foods-page">
-      <div className="foods-page-header">
+    <div className="page">
+      <div className="page-header">
         <h1>Foods</h1>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
@@ -106,20 +106,20 @@ export default function Foods() {
             <DialogHeader>
               <DialogTitle>New Food</DialogTitle>
             </DialogHeader>
-            <div className="food-form">
+            <div className="dialog-form">
               <Input
-                className="food-input"
+                className="dialog-input"
                 value={form.name}
                 placeholder="Name"
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
               />
 
-              <p className="food-section-label">Nutrition</p>
-              <div className="food-fields">
+              <p className="dialog-section-label">Nutrition</p>
+              <div className="dialog-fields">
                 <Input
                   type="number"
                   min="0"
-                  className="food-input"
+                  className="dialog-input"
                   value={form.servingSizeGrams ?? ""}
                   onChange={(e) =>
                     setForm({
@@ -132,7 +132,7 @@ export default function Foods() {
                 <Input
                   type="number"
                   min="0"
-                  className="food-input"
+                  className="dialog-input"
                   value={form.fats ?? ""}
                   onChange={(e) =>
                     setForm({
@@ -145,7 +145,7 @@ export default function Foods() {
                 <Input
                   type="number"
                   min="0"
-                  className="food-input"
+                  className="dialog-input"
                   value={form.carbs ?? ""}
                   onChange={(e) =>
                     setForm({
@@ -158,7 +158,7 @@ export default function Foods() {
                 <Input
                   type="number"
                   min="0"
-                  className="food-input"
+                  className="dialog-input"
                   value={form.protein ?? ""}
                   onChange={(e) =>
                     setForm({
@@ -172,7 +172,7 @@ export default function Foods() {
 
               {formError && <p className="form-error">{formError}</p>}
 
-              <Button className="food-button" onClick={handleSave}>
+              <Button className="dialog-button" onClick={handleSave}>
                 Save
               </Button>
             </div>
@@ -180,14 +180,14 @@ export default function Foods() {
         </Dialog>
       </div>
 
-      <div className="food-list">
+      <div className="list">
         {food.length === 0 ? (
-          <p className="food-empty">No foods yet</p>
+          <p className="list-empty">No foods yet</p>
         ) : (
           food.map((f) => (
-            <div key={f.id} className="food-row">
-              <span className="food-row-name">{f.name}</span>
-              <span className="food-row-meta">
+            <div key={f.id} className="list-row">
+              <span className="list-row-name">{f.name}</span>
+              <span className="list-row-meta">
                 {f.serving_size_grams}g · {f.calories} cal
               </span>
             </div>

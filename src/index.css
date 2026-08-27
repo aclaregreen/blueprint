@@ -209,14 +209,14 @@
   color: var(--destructive);
 }
 
-.food-form {
+.dialog-form {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
   flex: 1;
 }
 
-.food-section-label {
+.dialog-section-label {
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -224,40 +224,40 @@
   color: var(--muted-foreground);
 }
 
-.food-fields {
+.dialog-fields {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
 
-.food-input {
+.dialog-input {
   height: 2.75rem;
   font-size: 1rem;
 }
 
-.food-button {
+.dialog-button {
   height: 2.75rem;
   font-size: 1rem;
   margin-top: auto;
 }
 
-.foods-page {
+.page {
   padding: 1rem;
 }
 
-.foods-page-header {
+.page-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1rem;
 }
 
-.food-list {
+.list {
   display: flex;
   flex-direction: column;
 }
 
-.food-row {
+.list-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -265,17 +265,17 @@
   border-bottom: 1px solid var(--border);
 }
 
-.food-row-name {
+.list-row-name {
   font-size: 1rem;
   font-weight: 500;
 }
 
-.food-row-meta {
+.list-row-meta {
   font-size: 0.875rem;
   color: var(--muted-foreground);
 }
 
-.food-empty {
+.list-empty {
   padding: 2rem 0;
   text-align: center;
   color: var(--muted-foreground);

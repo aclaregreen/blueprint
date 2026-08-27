@@ -34,6 +34,7 @@ export default function Meals() {
     name: "",
     foods: [],
   });
+  const [formError, setFormError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [selectedFoodId, setSelectedFoodId] = useState<string | null>(null);
   const [selectedPortionSize, setSelectedPortionSize] = useState<number | null>(
@@ -81,33 +82,78 @@ export default function Meals() {
   }
 
   async function handleSave() {
-    //add save logic
+    if (formError) setFormError(null);
+    if (form.name.trim() === "" || form.foods.length === 0) {
+      setFormError("Missing required fields");
+      return;
+    }
+    const { data, error } = await supabase
+      .from("meal")
+      .insert({
+        name: form.name,
+        user_id: userId,
+      })
+      .select("id")
+      .single();
+    if (error) {
+      setFormError("Unable to create meal");
+      return;
+    }
+    if (!data.id) {
+      return;
+    }
+    for (const food of form.foods) {
+      const { error } = await supabase.from("meal_food").insert({
+        meal_id: data.id,
+        food_id: food.foodId,
+        portion_size_grams: food.portionSizeGrams,
+      });
+      if (error) {
+        setFormError("Unable to add food to meal");
+        return;
+      }
+    }
+    queryClient.invalidateQueries({ queryKey: ["meals"] });
+
+    setForm({
+      name: "",
+      foods: [],
+    });
+    setOpen(false);
   }
   return (
-    <div>
-      <h1>Meals</h1>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button>Add Meal</Button>
-        </DialogTrigger>
+    <div className="page">
+      <div className="page-header">
+        <h1>Meals</h1>
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <Button>Add Meal</Button>
+          </DialogTrigger>
         <DialogContent ref={dialogContentRef} className="fullscreen-dialog">
           <DialogHeader>
             <DialogTitle>New Meal</DialogTitle>
           </DialogHeader>
-          <div>
+          <div className="dialog-form">
             <Input
+              className="dialog-input"
               value={form.name}
               placeholder="Name"
               onChange={(e) => setForm({ ...form, name: e.target.value })}
             />
-            <div>
+
+            <p className="dialog-section-label">Foods</p>
+            <div className="dialog-fields">
               <Combobox
                 items={foods}
                 value={foods.find((f) => f.id === selectedFoodId) ?? null}
                 onValueChange={(item) => setSelectedFoodId(item?.id ?? null)}
                 itemToStringLabel={(item) => item.name}
               >
-                <ComboboxInput placeholder="Search for foods..." showClear />
+                <ComboboxInput
+                  className="dialog-input"
+                  placeholder="Search for foods..."
+                  showClear
+                />
                 <ComboboxContent container={dialogContentRef}>
                   <ComboboxEmpty>No foods found</ComboboxEmpty>
                   <ComboboxList>
@@ -120,8 +166,11 @@ export default function Meals() {
                 </ComboboxContent>
               </Combobox>
               {selectedFoodId && (
-                <div>
+                <div className="dialog-fields">
                   <Input
+                    className="dialog-input"
+                    type="number"
+                    min="0"
                     value={selectedPortionSize ?? ""}
                     onChange={(e) =>
                       setSelectedPortionSize(toNumberOrNull(e.target.value))
@@ -132,24 +181,37 @@ export default function Meals() {
                 </div>
               )}
             </div>
-            <div>
+
+            <div className="dialog-fields">
               {form.foods.map((item) => {
                 const food = foods.find((f) => f.id === item.foodId);
                 return (
                   <div key={item.foodId}>
-                    {food?.name} - {item.portionSizeGrams}
+                    {food?.name} - {item.portionSizeGrams}g
                   </div>
                 );
               })}
             </div>
+
+            {formError && <p className="form-error">{formError}</p>}
+
+            <Button className="dialog-button" onClick={handleSave}>
+              Save
+            </Button>
           </div>
         </DialogContent>
-      </Dialog>
-      <div>
+        </Dialog>
+      </div>
+
+      <div className="list">
         {meals.length === 0 ? (
-          <p>No meals yet</p>
+          <p className="list-empty">No meals yet</p>
         ) : (
-          meals.map((m) => <div key={m.id}>{m.name}</div>)
+          meals.map((m) => (
+            <div key={m.id} className="list-row">
+              <span className="list-row-name">{m.name}</span>
+            </div>
+          ))
         )}
       </div>
     </div>
