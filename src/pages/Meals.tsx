@@ -64,6 +64,22 @@ export default function Meals() {
   if (!session) return null;
   const userId = session.user.id;
 
+  function addFood() {
+    if (!selectedFoodId || !selectedPortionSize || selectedPortionSize <= 0) {
+      return;
+    }
+    if (form.foods.some((f) => f.foodId === selectedFoodId)) return;
+    setForm({
+      ...form,
+      foods: [
+        ...form.foods,
+        { foodId: selectedFoodId, portionSizeGrams: selectedPortionSize },
+      ],
+    });
+    setSelectedFoodId(null);
+    setSelectedPortionSize(null);
+  }
+
   async function handleSave() {
     //add save logic
   }
@@ -84,35 +100,48 @@ export default function Meals() {
               placeholder="Name"
               onChange={(e) => setForm({ ...form, name: e.target.value })}
             />
-            <Combobox
-              items={foods}
-              value={foods.find((f) => f.id === selectedFoodId) ?? null}
-              onValueChange={(item) => setSelectedFoodId(item?.id ?? null)}
-            >
-              <ComboboxInput placeholder="Search for foods..." showClear />
-              <ComboboxContent container={dialogContentRef}>
-                <ComboboxEmpty>No foods found</ComboboxEmpty>
-                <ComboboxList>
-                  {(item) => (
-                    <ComboboxItem key={item.id} value={item}>
-                      {item.name}
-                    </ComboboxItem>
-                  )}
-                </ComboboxList>
-              </ComboboxContent>
-            </Combobox>
-            {selectedFoodId && (
-              <div>
-                <Input
-                  value={selectedPortionSize ?? ""}
-                  onChange={(e) =>
-                    setSelectedPortionSize(toNumberOrNull(e.target.value))
-                  }
-                  placeholder="Portion Size (g)"
-                />
-                <Button>Add to meal</Button>
-              </div>
-            )}
+            <div>
+              <Combobox
+                items={foods}
+                value={foods.find((f) => f.id === selectedFoodId) ?? null}
+                onValueChange={(item) => setSelectedFoodId(item?.id ?? null)}
+                itemToStringLabel={(item) => item.name}
+              >
+                <ComboboxInput placeholder="Search for foods..." showClear />
+                <ComboboxContent container={dialogContentRef}>
+                  <ComboboxEmpty>No foods found</ComboboxEmpty>
+                  <ComboboxList>
+                    {(item) => (
+                      <ComboboxItem key={item.id} value={item}>
+                        {item.name}
+                      </ComboboxItem>
+                    )}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
+              {selectedFoodId && (
+                <div>
+                  <Input
+                    value={selectedPortionSize ?? ""}
+                    onChange={(e) =>
+                      setSelectedPortionSize(toNumberOrNull(e.target.value))
+                    }
+                    placeholder="Portion Size (g)"
+                  />
+                  <Button onClick={addFood}>Add to meal</Button>
+                </div>
+              )}
+            </div>
+            <div>
+              {form.foods.map((item) => {
+                const food = foods.find((f) => f.id === item.foodId);
+                return (
+                  <div key={item.foodId}>
+                    {food?.name} - {item.portionSizeGrams}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </DialogContent>
       </Dialog>
