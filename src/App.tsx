@@ -3,6 +3,7 @@ import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import ProtectedRoute from "@/ProtectedRoute";
 import Foods from "@/pages/Foods";
+import Meals from "@/pages/Meals";
 function App() {
   return (
     <BrowserRouter>
@@ -12,6 +13,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Home />} />
           <Route path="/foods" element={<Foods />} />
+          <Route path="/meals" element={<Meals />} />
         </Route>
       </Routes>
     </BrowserRouter>

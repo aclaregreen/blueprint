@@ -8,6 +8,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { toNumberOrNull } from "@/lib/helpers";
 import { supabase } from "@/supabaseClient";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -46,10 +47,6 @@ export default function Foods() {
 
   if (!session) return null;
   const userId = session.user.id;
-
-  function toNumberOrNull(val: string) {
-    return val === "" ? null : Number(val);
-  }
 
   async function handleSave() {
     if (formError) setFormError(null);
@@ -98,99 +95,99 @@ export default function Foods() {
   }
 
   return (
-    <div className="foods-page">
-      <div className="foods-page-header">
+    <div className="page">
+      <div className="page-header">
         <h1>Foods</h1>
         <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button>Add Food</Button>
-        </DialogTrigger>
-        <DialogContent className="fullscreen-dialog">
-          <DialogHeader>
-            <DialogTitle>New Food</DialogTitle>
-          </DialogHeader>
-          <div className="food-form">
-            <Input
-              className="food-input"
-              value={form.name}
-              placeholder="Name"
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-            />
+          <DialogTrigger asChild>
+            <Button>Add Food</Button>
+          </DialogTrigger>
+          <DialogContent className="fullscreen-dialog">
+            <DialogHeader>
+              <DialogTitle>New Food</DialogTitle>
+            </DialogHeader>
+            <div className="dialog-form">
+              <Input
+                className="dialog-input"
+                value={form.name}
+                placeholder="Name"
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+              />
 
-            <p className="food-section-label">Nutrition</p>
-            <div className="food-fields">
-              <Input
-                type="number"
-                min="0"
-                className="food-input"
-                value={form.servingSizeGrams ?? ""}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    servingSizeGrams: toNumberOrNull(e.target.value),
-                  })
-                }
-                placeholder="Serving Size (g)"
-              />
-              <Input
-                type="number"
-                min="0"
-                className="food-input"
-                value={form.fats ?? ""}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    fats: toNumberOrNull(e.target.value),
-                  })
-                }
-                placeholder="Fats (g)"
-              />
-              <Input
-                type="number"
-                min="0"
-                className="food-input"
-                value={form.carbs ?? ""}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    carbs: toNumberOrNull(e.target.value),
-                  })
-                }
-                placeholder="Carbs (g)"
-              />
-              <Input
-                type="number"
-                min="0"
-                className="food-input"
-                value={form.protein ?? ""}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    protein: toNumberOrNull(e.target.value),
-                  })
-                }
-                placeholder="Protein (g)"
-              />
+              <p className="dialog-section-label">Nutrition</p>
+              <div className="dialog-fields">
+                <Input
+                  type="number"
+                  min="0"
+                  className="dialog-input"
+                  value={form.servingSizeGrams ?? ""}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      servingSizeGrams: toNumberOrNull(e.target.value),
+                    })
+                  }
+                  placeholder="Serving Size (g)"
+                />
+                <Input
+                  type="number"
+                  min="0"
+                  className="dialog-input"
+                  value={form.fats ?? ""}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      fats: toNumberOrNull(e.target.value),
+                    })
+                  }
+                  placeholder="Fats (g)"
+                />
+                <Input
+                  type="number"
+                  min="0"
+                  className="dialog-input"
+                  value={form.carbs ?? ""}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      carbs: toNumberOrNull(e.target.value),
+                    })
+                  }
+                  placeholder="Carbs (g)"
+                />
+                <Input
+                  type="number"
+                  min="0"
+                  className="dialog-input"
+                  value={form.protein ?? ""}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      protein: toNumberOrNull(e.target.value),
+                    })
+                  }
+                  placeholder="Protein (g)"
+                />
+              </div>
+
+              {formError && <p className="form-error">{formError}</p>}
+
+              <Button className="dialog-button" onClick={handleSave}>
+                Save
+              </Button>
             </div>
-
-            {formError && <p className="form-error">{formError}</p>}
-
-            <Button className="food-button" onClick={handleSave}>
-              Save
-            </Button>
-          </div>
-        </DialogContent>
+          </DialogContent>
         </Dialog>
       </div>
 
-      <div className="food-list">
+      <div className="list">
         {food.length === 0 ? (
-          <p className="food-empty">No foods yet</p>
+          <p className="list-empty">No foods yet</p>
         ) : (
           food.map((f) => (
-            <div key={f.id} className="food-row">
-              <span className="food-row-name">{f.name}</span>
-              <span className="food-row-meta">
+            <div key={f.id} className="list-row">
+              <span className="list-row-name">{f.name}</span>
+              <span className="list-row-meta">
                 {f.serving_size_grams}g · {f.calories} cal
               </span>
             </div>
