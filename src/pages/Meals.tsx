@@ -129,7 +129,7 @@ export default function Meals() {
           <DialogTrigger asChild>
             <Button>Add Meal</Button>
           </DialogTrigger>
-        <DialogContent ref={dialogContentRef} className="fullscreen-dialog">
+        <DialogContent ref={dialogContentRef} className="fullscreen-dialog translate-none">
           <DialogHeader>
             <DialogTitle>New Meal</DialogTitle>
           </DialogHeader>

@@ -102,7 +102,7 @@ export default function Foods() {
           <DialogTrigger asChild>
             <Button>Add Food</Button>
           </DialogTrigger>
-          <DialogContent className="fullscreen-dialog">
+          <DialogContent className="fullscreen-dialog translate-none">
             <DialogHeader>
               <DialogTitle>New Food</DialogTitle>
             </DialogHeader>
