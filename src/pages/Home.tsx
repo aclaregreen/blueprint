@@ -43,14 +43,48 @@ export default function Home() {
     },
   });
 
+  const dailyTotals = diaryEntries.reduce(
+    (totals, entry) => ({
+      calories: totals.calories + entry.calories,
+      fats: totals.fats + entry.fats,
+      carbs: totals.carbs + entry.carbs,
+      protein: totals.protein + entry.protein,
+    }),
+    { calories: 0, fats: 0, carbs: 0, protein: 0 },
+  );
+
   if (!session) return null;
   const userId = session.user.id;
 
   type MealFoodRow = (typeof mealFoods)[number];
 
+  function checkMealCompletionStatus(mealId: string, mealFoods: MealFoodRow[]) {
+    return mealFoods.every((mf) =>
+      diaryEntries.find(
+        (d) => d.meal_id === mealId && d.food_id === mf.food.id,
+      ),
+    );
+  }
+
   function checkCompletionStatus(mealId: string, mealFood: MealFoodRow) {
     return diaryEntries.find(
       (d) => d.meal_id === mealId && d.food_id === mealFood.food.id,
+    );
+  }
+  async function toggleMeal(
+    mealId: string,
+    mealFoods: MealFoodRow[],
+    isCompleted: boolean,
+  ) {
+    await Promise.all(
+      mealFoods.map(async (mf) => {
+        const entry = checkCompletionStatus(mealId, mf);
+        if (isCompleted) {
+          if (entry) await toggleFood(mealId, mf, entry);
+        } else {
+          if (!entry) await toggleFood(mealId, mf, entry);
+        }
+      }),
     );
   }
   async function toggleFood(
@@ -84,6 +118,8 @@ export default function Home() {
   return (
     <div>
       <h1>Blueprint</h1>
+      {dailyTotals.calories} {dailyTotals.carbs} {dailyTotals.fats}{" "}
+      {dailyTotals.protein}
       <div>
         {meals.map((m) => {
           const mealFoodsForThisMeal = mealFoods.filter(
@@ -94,11 +130,24 @@ export default function Home() {
               (d) => d.meal_id === m.id && d.food_id === mf.food.id,
             ),
           ).length;
+          const mealCompleted = checkMealCompletionStatus(
+            m.id,
+            mealFoodsForThisMeal,
+          );
           return (
             <div key={m.id}>
-              <p>
-                {m.name} ({loggedCount}/{mealFoodsForThisMeal.length})
-              </p>
+              <Button
+                variant="ghost"
+                onClick={() =>
+                  toggleMeal(m.id, mealFoodsForThisMeal, mealCompleted)
+                }
+              >
+                {mealCompleted ? <Check /> : <Square />}
+                <p>
+                  {m.name} ({loggedCount}/{mealFoodsForThisMeal.length})
+                </p>
+              </Button>
+
               {mealFoodsForThisMeal.map((mf) => {
                 const loggedEntry = checkCompletionStatus(m.id, mf);
                 return (
