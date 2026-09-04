@@ -243,6 +243,7 @@
 
 .page {
   padding: 1rem;
+  padding-bottom: 5rem;
 }
 
 .page-header {
@@ -316,4 +317,32 @@
 
 .meal-foods {
   padding-left: 1.5rem;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  padding: 0.5rem 0;
+  padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+  background: var(--background);
+  border-top: 1px solid var(--border);
+}
+
+.bottom-nav-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  height: auto;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+}
+
+.bottom-nav-button-active {
+  color: var(--foreground);
 }
