@@ -116,58 +116,97 @@ export default function Home() {
     queryClient.invalidateQueries({ queryKey: ["diaryEntries"] });
   }
   return (
-    <div>
-      <h1>Blueprint</h1>
-      {dailyTotals.calories} {dailyTotals.carbs} {dailyTotals.fats}{" "}
-      {dailyTotals.protein}
-      <div>
-        {meals.map((m) => {
-          const mealFoodsForThisMeal = mealFoods.filter(
-            (mf) => mf.meal_id === m.id,
-          );
-          const loggedCount = mealFoodsForThisMeal.filter((mf) =>
-            diaryEntries.some(
-              (d) => d.meal_id === m.id && d.food_id === mf.food.id,
-            ),
-          ).length;
-          const mealCompleted = checkMealCompletionStatus(
-            m.id,
-            mealFoodsForThisMeal,
-          );
-          return (
-            <div key={m.id}>
-              <Button
-                variant="ghost"
-                onClick={() =>
-                  toggleMeal(m.id, mealFoodsForThisMeal, mealCompleted)
-                }
-              >
-                {mealCompleted ? <Check /> : <Square />}
-                <p>
-                  {m.name} ({loggedCount}/{mealFoodsForThisMeal.length})
-                </p>
-              </Button>
+    <div className="page">
+      <h1>Today</h1>
 
-              {mealFoodsForThisMeal.map((mf) => {
-                const loggedEntry = checkCompletionStatus(m.id, mf);
-                return (
-                  <Button
-                    key={mf.food.id}
-                    variant="ghost"
-                    onClick={() => toggleFood(m.id, mf, loggedEntry)}
-                  >
-                    {loggedEntry ? <Check /> : <Square />}
-                    <p>{mf.food.name}</p>
-                    <p>
-                      {(mf.food.calories ?? 0) *
-                        (mf.portion_size_grams / mf.food.serving_size_grams)}
-                    </p>
-                  </Button>
-                );
-              })}
-            </div>
-          );
-        })}
+      <div className="daily-totals">
+        <div className="daily-totals-item">
+          <span className="daily-totals-value">
+            {Math.round(dailyTotals.calories)}
+          </span>
+          <span className="daily-totals-label">Calories</span>
+        </div>
+        <div className="daily-totals-item">
+          <span className="daily-totals-value">
+            {Math.round(dailyTotals.fats)}
+          </span>
+          <span className="daily-totals-label">Fats</span>
+        </div>
+        <div className="daily-totals-item">
+          <span className="daily-totals-value">
+            {Math.round(dailyTotals.carbs)}
+          </span>
+          <span className="daily-totals-label">Carbs</span>
+        </div>
+        <div className="daily-totals-item">
+          <span className="daily-totals-value">
+            {Math.round(dailyTotals.protein)}
+          </span>
+          <span className="daily-totals-label">Protein</span>
+        </div>
+      </div>
+
+      <div className="list">
+        {meals.length === 0 ? (
+          <p className="list-empty">No meals yet</p>
+        ) : (
+          meals.map((m) => {
+            const mealFoodsForThisMeal = mealFoods.filter(
+              (mf) => mf.meal_id === m.id,
+            );
+            const loggedCount = mealFoodsForThisMeal.filter((mf) =>
+              diaryEntries.some(
+                (d) => d.meal_id === m.id && d.food_id === mf.food.id,
+              ),
+            ).length;
+            const mealCompleted = checkMealCompletionStatus(
+              m.id,
+              mealFoodsForThisMeal,
+            );
+            return (
+              <div key={m.id} className="meal-group">
+                <Button
+                  variant="ghost"
+                  className="list-row"
+                  onClick={() =>
+                    toggleMeal(m.id, mealFoodsForThisMeal, mealCompleted)
+                  }
+                >
+                  {mealCompleted ? <Check /> : <Square />}
+                  <span className="list-row-name">{m.name}</span>
+                  <span className="list-row-meta">
+                    {loggedCount}/{mealFoodsForThisMeal.length}
+                  </span>
+                </Button>
+
+                <div className="list meal-foods">
+                  {mealFoodsForThisMeal.map((mf) => {
+                    const loggedEntry = checkCompletionStatus(m.id, mf);
+                    return (
+                      <Button
+                        key={mf.food.id}
+                        variant="ghost"
+                        className="list-row"
+                        onClick={() => toggleFood(m.id, mf, loggedEntry)}
+                      >
+                        {loggedEntry ? <Check /> : <Square />}
+                        <span className="list-row-name">{mf.food.name}</span>
+                        <span className="list-row-meta">
+                          {Math.round(
+                            (mf.food.calories ?? 0) *
+                              (mf.portion_size_grams /
+                                mf.food.serving_size_grams),
+                          )}{" "}
+                          cal
+                        </span>
+                      </Button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
     </div>
   );
