@@ -171,6 +171,8 @@
   display: flex;
   flex-direction: column;
   padding: 1rem;
+  padding-top: calc(1rem + env(safe-area-inset-top));
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
   gap: 0.75rem;
   overflow-y: auto;
   animation-duration: 0.35s;
@@ -326,7 +328,7 @@
   display: flex;
   justify-content: space-around;
   padding: 0.5rem 0;
-  padding-bottom: min(env(safe-area-inset-bottom), 0.75rem);
+  padding-bottom: min(env(safe-area-inset-bottom), 0.5rem);
   background: var(--background);
   border-top: 1px solid var(--border);
 }
