@@ -1,0 +1,7 @@
+{
+  "name": "Blueprint",
+  "short_name": "Blueprint",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone"
+}
