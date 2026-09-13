@@ -358,7 +358,7 @@
   display: flex;
   justify-content: space-around;
   padding: 0.5rem 0;
-  padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
+  padding-bottom: max(env(safe-area-inset-bottom), 0.3rem);
   background: var(--background);
   border-top: 1px solid var(--border);
 }
