@@ -121,12 +121,28 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html,
+  body,
+  #root {
+    @apply h-full;
+  }
   body {
     @apply bg-background text-foreground;
   }
   html {
     @apply font-sans;
   }
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
+.app-content {
+  flex: 1;
+  overflow-y: auto;
 }
 
 .login-page {
@@ -247,7 +263,6 @@
 .page {
   padding: 1rem;
   padding-top: calc(1rem + env(safe-area-inset-top));
-  padding-bottom: 5rem;
 }
 
 .page-header {
@@ -267,7 +282,6 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.875rem 0;
-  border-bottom: 1px solid var(--border);
 }
 
 .list-row-name {
@@ -323,11 +337,24 @@
   padding-left: 1.5rem;
 }
 
-.bottom-nav {
+.quick-add-entries {
+  margin-top: 1.5rem;
+}
+
+.quick-add-fab {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  right: 1.25rem;
+  bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  width: 3.5rem;
+  height: 3.5rem;
+  padding: 0;
+  border-radius: 9999px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.3);
+  z-index: 10;
+}
+
+.bottom-nav {
+  flex-shrink: 0;
   display: flex;
   justify-content: space-around;
   padding: 0.5rem 0;

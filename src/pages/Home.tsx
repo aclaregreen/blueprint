@@ -1,12 +1,32 @@
 import { useAuth } from "@/AuthContext";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { toNumberOrNull } from "@/lib/helpers";
 import { supabase } from "@/supabaseClient";
+import type { NutritionForm } from "@/types/types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, Square } from "lucide-react";
+import { Check, Plus, Square } from "lucide-react";
+import { useState } from "react";
 
 export default function Home() {
   const { session } = useAuth();
   const queryClient = useQueryClient();
+  const [quickAddForm, setQuickAddForm] = useState<NutritionForm>({
+    name: "",
+    servingSizeGrams: null,
+    fats: null,
+    carbs: null,
+    protein: null,
+  });
+  const [quickAddError, setQuickAddError] = useState<string | null>(null);
+  const [quickAddOpen, setQuickAddOpen] = useState(false);
   const { data: meals = [] } = useQuery({
     queryKey: ["meals"],
     queryFn: async () => {
@@ -105,6 +125,7 @@ export default function Home() {
         user_id: userId,
         meal_id: mealId,
         food_id: mealFood.food.id,
+        name: mealFood.food.name,
         portion_size_grams: mealFood.portion_size_grams,
         calories: (mealFood.food.calories ?? 0) * multiplier,
         fats: mealFood.food.fats * multiplier,
@@ -114,6 +135,57 @@ export default function Home() {
       if (error) return;
     }
     queryClient.invalidateQueries({ queryKey: ["diaryEntries"] });
+  }
+  async function removeDiaryEntry(entryId: string) {
+    const { error } = await supabase
+      .from("diary_entry")
+      .delete()
+      .eq("id", entryId);
+    if (error) return;
+    queryClient.invalidateQueries({ queryKey: ["diaryEntries"] });
+  }
+  async function quickAddFood() {
+    const { name, servingSizeGrams, fats, carbs, protein } = quickAddForm;
+    if (
+      name.trim() === "" ||
+      servingSizeGrams === null ||
+      fats === null ||
+      carbs === null ||
+      protein === null
+    ) {
+      setQuickAddError("Missing required fields");
+      return;
+    }
+    if (servingSizeGrams < 0 || fats < 0 || carbs < 0 || protein < 0) {
+      setQuickAddError("Nutrition fields can't be negative");
+      return;
+    }
+    setQuickAddError(null);
+
+    const { error } = await supabase.from("diary_entry").insert({
+      user_id: userId,
+      meal_id: null,
+      food_id: null,
+      name,
+      portion_size_grams: servingSizeGrams,
+      calories: fats * 9 + carbs * 4 + protein * 4,
+      fats,
+      carbs,
+      protein,
+    });
+    if (error) {
+      setQuickAddError(error.message);
+      return;
+    }
+    queryClient.invalidateQueries({ queryKey: ["diaryEntries"] });
+    setQuickAddForm({
+      name: "",
+      servingSizeGrams: null,
+      fats: null,
+      carbs: null,
+      protein: null,
+    });
+    setQuickAddOpen(false);
   }
   return (
     <div className="page">
@@ -207,7 +279,101 @@ export default function Home() {
             );
           })
         )}
+        <div className="quick-add-entries">
+          {diaryEntries.filter((d) => d.food_id === null).length > 0 && (
+            <p className="dialog-section-label">Extra entries</p>
+          )}
+          {diaryEntries
+            .filter((d) => d.food_id === null)
+            .map((d) => (
+              <Button
+                key={d.id}
+                variant="ghost"
+                className="list-row"
+                onClick={() => removeDiaryEntry(d.id)}
+              >
+                <Check />
+                <span className="list-row-name">{d.name}</span>
+                <span className="list-row-meta">
+                  {Math.round(d.calories)} cal
+                </span>
+              </Button>
+            ))}
+        </div>
       </div>
+
+      <Dialog open={quickAddOpen} onOpenChange={setQuickAddOpen}>
+        <DialogTrigger asChild>
+          <Button className="quick-add-fab" aria-label="Quick add">
+            <Plus />
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Quick Add Food</DialogTitle>
+          </DialogHeader>
+          <div className="dialog-form">
+            <Input
+              placeholder="Name"
+              value={quickAddForm.name}
+              onChange={(e) =>
+                setQuickAddForm({ ...quickAddForm, name: e.target.value })
+              }
+            />
+            <p className="dialog-section-label">Nutrition</p>
+            <Input
+              placeholder="Serving Size (g)"
+              type="number"
+              min="0"
+              value={quickAddForm.servingSizeGrams ?? ""}
+              onChange={(e) =>
+                setQuickAddForm({
+                  ...quickAddForm,
+                  servingSizeGrams: toNumberOrNull(e.target.value),
+                })
+              }
+            />
+            <Input
+              placeholder="Fats (g)"
+              type="number"
+              min="0"
+              value={quickAddForm.fats ?? ""}
+              onChange={(e) =>
+                setQuickAddForm({
+                  ...quickAddForm,
+                  fats: toNumberOrNull(e.target.value),
+                })
+              }
+            />
+            <Input
+              placeholder="Carbs (g)"
+              type="number"
+              min="0"
+              value={quickAddForm.carbs ?? ""}
+              onChange={(e) =>
+                setQuickAddForm({
+                  ...quickAddForm,
+                  carbs: toNumberOrNull(e.target.value),
+                })
+              }
+            />
+            <Input
+              placeholder="Protein (g)"
+              type="number"
+              min="0"
+              value={quickAddForm.protein ?? ""}
+              onChange={(e) =>
+                setQuickAddForm({
+                  ...quickAddForm,
+                  protein: toNumberOrNull(e.target.value),
+                })
+              }
+            />
+            {quickAddError && <p className="form-error">{quickAddError}</p>}
+            <Button onClick={quickAddFood}>Add</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

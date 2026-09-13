@@ -39,10 +39,11 @@ export type Database = {
           calories: number
           carbs: number
           fats: number
-          food_id: string
+          food_id: string | null
           id: string
           logged_at: string
           meal_id: string | null
+          name: string
           portion_size_grams: number
           protein: number
           user_id: string
@@ -51,10 +52,11 @@ export type Database = {
           calories: number
           carbs: number
           fats: number
-          food_id: string
+          food_id?: string | null
           id?: string
           logged_at?: string
           meal_id?: string | null
+          name: string
           portion_size_grams: number
           protein: number
           user_id: string
@@ -63,10 +65,11 @@ export type Database = {
           calories?: number
           carbs?: number
           fats?: number
-          food_id?: string
+          food_id?: string | null
           id?: string
           logged_at?: string
           meal_id?: string | null
+          name?: string
           portion_size_grams?: number
           protein?: number
           user_id?: string
