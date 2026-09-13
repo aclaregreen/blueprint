@@ -10,16 +10,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { toNumberOrNull } from "@/lib/helpers";
 import { supabase } from "@/supabaseClient";
+import type { NutritionForm } from "@/types/types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-
-type NutritionForm = {
-  name: string;
-  servingSizeGrams: number | null;
-  fats: number | null;
-  carbs: number | null;
-  protein: number | null;
-};
 
 export default function Foods() {
   const { session } = useAuth();
@@ -49,33 +42,30 @@ export default function Foods() {
   const userId = session.user.id;
 
   async function handleSave() {
-    if (formError) setFormError(null);
+    const { name, servingSizeGrams, fats, carbs, protein } = form;
     if (
-      form.name.trim() === "" ||
-      form.servingSizeGrams === null ||
-      form.fats === null ||
-      form.carbs === null ||
-      form.protein === null
+      name.trim() === "" ||
+      servingSizeGrams === null ||
+      fats === null ||
+      carbs === null ||
+      protein === null
     ) {
       setFormError("Missing required fields");
       return;
     }
-    if (
-      form.servingSizeGrams < 0 ||
-      form.fats < 0 ||
-      form.carbs < 0 ||
-      form.protein < 0
-    ) {
+    if (servingSizeGrams < 0 || fats < 0 || carbs < 0 || protein < 0) {
       setFormError("Nutrition fields can't be negative");
       return;
     }
+    setFormError(null);
+
     const { error } = await supabase.from("food").insert({
       user_id: userId,
-      name: form.name,
-      serving_size_grams: form.servingSizeGrams,
-      fats: form.fats,
-      carbs: form.carbs,
-      protein: form.protein,
+      name,
+      serving_size_grams: servingSizeGrams,
+      fats,
+      carbs,
+      protein,
     });
 
     if (error) {

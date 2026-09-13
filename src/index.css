@@ -267,7 +267,6 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.875rem 0;
-  border-bottom: 1px solid var(--border);
 }
 
 .list-row-name {
@@ -321,6 +320,22 @@
 
 .meal-foods {
   padding-left: 1.5rem;
+}
+
+.quick-add-entries {
+  margin-top: 1.5rem;
+}
+
+.quick-add-fab {
+  position: fixed;
+  right: 1.25rem;
+  bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  width: 3.5rem;
+  height: 3.5rem;
+  padding: 0;
+  border-radius: 9999px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.3);
+  z-index: 10;
 }
 
 .bottom-nav {
