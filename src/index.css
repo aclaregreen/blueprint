@@ -121,12 +121,28 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html,
+  body,
+  #root {
+    @apply h-full;
+  }
   body {
     @apply bg-background text-foreground;
   }
   html {
     @apply font-sans;
   }
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
+.app-content {
+  flex: 1;
+  overflow-y: auto;
 }
 
 .login-page {
@@ -247,7 +263,6 @@
 .page {
   padding: 1rem;
   padding-top: calc(1rem + env(safe-area-inset-top));
-  padding-bottom: 5rem;
 }
 
 .page-header {
@@ -339,10 +354,7 @@
 }
 
 .bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  flex-shrink: 0;
   display: flex;
   justify-content: space-around;
   padding: 0.5rem 0;

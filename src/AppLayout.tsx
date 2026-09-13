@@ -3,9 +3,11 @@ import { Outlet } from "react-router";
 
 export default function AppLaout() {
   return (
-    <>
-      <Outlet />
+    <div className="app-shell">
+      <div className="app-content">
+        <Outlet />
+      </div>
       <BottomNav />
-    </>
+    </div>
   );
 }
